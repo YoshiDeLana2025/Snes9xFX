@@ -716,7 +716,7 @@ bool LoadPrefs()
 		FixInvalidSettings();
 	}
 	
-	// rename snes9x to snes9xtx
+	// rename snes9x to snes9xfx
 	if(GCSettings.LoadMethod == DEVICE_SD)
 	{
 		sdMounted = ChangeInterface(DEVICE_SD, NOTSILENT);
