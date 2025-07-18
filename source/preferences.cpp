@@ -721,33 +721,33 @@ bool LoadPrefs()
 	{
 		sdMounted = ChangeInterface(DEVICE_SD, NOTSILENT);
 		if(sdMounted && opendir("sd:/snes9x"))
-			rename("sd:/snes9x", "sd:/snes9xtx");
+			rename("sd:/snes9x", "sd:/snes9xfx");
 	}
 	else if(GCSettings.LoadMethod == DEVICE_USB)
 	{
 		usbMounted = ChangeInterface(DEVICE_USB, NOTSILENT);
 		if(usbMounted && opendir("usb:/snes9x"))
-			rename("usb:/snes9x", "usb:/snes9xtx");	
+			rename("usb:/snes9x", "usb:/snes9xfx");	
 	}
 
 	// update folder locations
 	if(strcmp(GCSettings.LoadFolder, "snes9x/roms") == 0)
-		sprintf(GCSettings.LoadFolder, "snes9xtx/roms");
+		sprintf(GCSettings.LoadFolder, "snes9xfx/roms");
 	
 	if(strcmp(GCSettings.SaveFolder, "snes9x/saves") == 0)
-		sprintf(GCSettings.SaveFolder, "snes9xtx/saves");
+		sprintf(GCSettings.SaveFolder, "snes9xfx/saves");
 	
 	if(strcmp(GCSettings.CheatFolder, "snes9x/cheats") == 0)
-		sprintf(GCSettings.CheatFolder, "snes9xtx/cheats");
+		sprintf(GCSettings.CheatFolder, "snes9xfx/cheats");
 		
 	if(strcmp(GCSettings.ScreenshotsFolder, "snes9x/screenshots") == 0)
-		sprintf(GCSettings.ScreenshotsFolder, "snes9xtx/screenshots");
+		sprintf(GCSettings.ScreenshotsFolder, "snes9xfx/screenshots");
 
 	if(strcmp(GCSettings.CoverFolder, "snes9x/covers") == 0)
-		sprintf(GCSettings.CoverFolder, "snes9xtx/covers");
+		sprintf(GCSettings.CoverFolder, "snes9xfx/covers");
 	
 	if(strcmp(GCSettings.ArtworkFolder, "snes9x/artwork") == 0)
-		sprintf(GCSettings.ArtworkFolder, "snes9xtx/artwork");
+		sprintf(GCSettings.ArtworkFolder, "snes9xfx/artwork");
 	
 	// attempt to create directories if they don't exist
 	if((GCSettings.LoadMethod == DEVICE_SD && sdMounted) || (GCSettings.LoadMethod == DEVICE_USB && usbMounted) ) {
