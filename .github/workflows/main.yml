@@ -1,11 +1,11 @@
-name: Snes9x TX Build
+name: Snes9xFX Build
 
 on: [push, pull_request]
 
 jobs:
   build:
-    name: Build Snes9x TX
-    runs-on: ubuntu-20.04
+    name: Build Snes9xFX
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         image: ["Wii", "GameCube"]
@@ -24,23 +24,23 @@ jobs:
     - name: Copy Wii artifact
       if: ${{ matrix.image == 'Wii' }}
       run: | 
-        mkdir -p dist/Snes9xTX/apps/snes9xtx
-        mkdir -p dist/Snes9xTX/snes9xtx/roms
-        mkdir dist/Snes9xTX/snes9xtx/cheats
-        mkdir dist/Snes9xTX/snes9xtx/saves
-        touch dist/Snes9xTX/snes9xtx/roms/romsdir
-        touch dist/Snes9xTX/snes9xtx/cheats/cheatsdir
-        touch dist/Snes9xTX/snes9xtx/saves/savesdir
-        cp hbc/* dist/Snes9xTX/apps/snes9xtx/
-        cp executables/snes9xtx-wii.dol dist/Snes9xTX/apps/snes9xtx/boot.dol
+        mkdir -p dist/Snes9xFX/apps/snes9xfx
+        mkdir -p dist/Snes9xFX/snes9xfx/roms
+        mkdir dist/Snes9xFX/snes9xfx/cheats
+        mkdir dist/Snes9xFX/snes9xfx/saves
+        touch dist/Snes9xFX/snes9xfx/roms/romsdir
+        touch dist/Snes9xFX/snes9xfx/cheats/cheatsdir
+        touch dist/Snes9xFX/snes9xfx/saves/savesdir
+        cp hbc/* dist/Snes9xFX/apps/snes9xfx/
+        cp executables/snes9xfx-wii.dol dist/Snes9xFX/apps/snes9xfx/boot.dol
 
     - name: Upload Wii artifacts
       uses: actions/upload-artifact@v3.1.0
       if: ${{ matrix.image == 'Wii' }}
       with: 
-        name: Snes9xTX
+        name: Snes9xFX
         path: |
-         dist/Snes9xTX/
+         dist/Snes9xFX/
     
     - name: Build GameCube
       if: ${{ matrix.image == 'GameCube' }}
@@ -50,13 +50,13 @@ jobs:
     - name: Copy GameCube artifact
       if: ${{ matrix.image == 'GameCube' }}
       run: | 
-        mkdir -p dist/Snes9xTX-GameCube
-        cp executables/snes9xtx-gc.dol dist/Snes9xTX-GameCube/
+        mkdir -p dist/Snes9xFX-GameCube
+        cp executables/snes9xfx-gc.dol dist/Snes9xFX-GameCube/
     
     - name: Upload GameCube artifact
       uses: actions/upload-artifact@v3.1.0
       if: ${{ matrix.image == 'GameCube' }}
       with: 
-        name: Snes9xTX-GameCube
+        name: Snes9xFX-GameCube
         path: |
-         dist/Snes9xTX-GameCube/
+         dist/Snes9xFX-GameCube/
