@@ -20,9 +20,9 @@
 #include "filter.h"
 #include "filelist.h"
 
-#define APPNAME 			"Snes9x TX"
+#define APPNAME 			"Snes9xFX"
 #define APPVERSION 			"1.1.3"
-#define APPFOLDER 			"snes9xtx"
+#define APPFOLDER 			"snes9xfx"
 #define PREF_FILE_NAME		"settings.xml"
 
 #define MAXPATHLEN 1024
