@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         image: ["Wii", "GameCube"]
-    container: devkitpro/devkitppc:latest
+    container: devkitpro/devkitppc:20230110
  
     steps:
     - uses: actions/checkout@v1
