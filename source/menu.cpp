@@ -1753,7 +1753,7 @@ static int MenuGame()
 		{
 			menu = MENU_EXIT;
 			
-			exitSound->Play()
+			exitSound->Play();
 			bgTopImg->SetEffect(EFFECT_SLIDE_TOP | EFFECT_SLIDE_OUT, 15);
 			closeBtn.SetEffect(EFFECT_SLIDE_TOP | EFFECT_SLIDE_OUT, 15);
 			titleTxt.SetEffect(EFFECT_SLIDE_TOP | EFFECT_SLIDE_OUT, 15);
@@ -2087,7 +2087,7 @@ static int MenuGameSaves(int action)
 		{
 			menu = MENU_EXIT;
 
-			exitSound->Play()
+			exitSound->Play();
 			bgTopImg->SetEffect(EFFECT_SLIDE_TOP | EFFECT_SLIDE_OUT, 15);
 			closeBtn.SetEffect(EFFECT_SLIDE_TOP | EFFECT_SLIDE_OUT, 15);
 			titleTxt.SetEffect(EFFECT_SLIDE_TOP | EFFECT_SLIDE_OUT, 15);
@@ -2338,7 +2338,7 @@ static int MenuGameSettings()
 		{
 			menu = MENU_EXIT;
 
-			exitSound->Play()
+			exitSound->Play();
 			bgTopImg->SetEffect(EFFECT_SLIDE_TOP | EFFECT_SLIDE_OUT, 15);
 			closeBtn.SetEffect(EFFECT_SLIDE_TOP | EFFECT_SLIDE_OUT, 15);
 			titleTxt.SetEffect(EFFECT_SLIDE_TOP | EFFECT_SLIDE_OUT, 15);
