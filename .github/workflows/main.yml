@@ -1,7 +1,6 @@
 name: Snes9xFX Build
 
-on: [push, pull_request]
-
+on: workflow_dispatch
 jobs:
   build:
     name: Build Snes9xFX
@@ -35,7 +34,7 @@ jobs:
         cp executables/snes9xfx-wii.dol dist/Snes9xFX/apps/snes9xfx/boot.dol
 
     - name: Upload Wii artifacts
-      uses: actions/upload-artifact@v3.1.0
+      uses: actions/upload-artifact@v4
       if: ${{ matrix.image == 'Wii' }}
       with: 
         name: Snes9xFX
@@ -54,7 +53,7 @@ jobs:
         cp executables/snes9xfx-gc.dol dist/Snes9xFX-GameCube/
     
     - name: Upload GameCube artifact
-      uses: actions/upload-artifact@v3.1.0
+      uses: actions/upload-artifact@v4
       if: ${{ matrix.image == 'GameCube' }}
       with: 
         name: Snes9xFX-GameCube
