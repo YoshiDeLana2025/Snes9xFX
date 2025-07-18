@@ -34,7 +34,9 @@
 // Sounds
 #ifdef HW_RVL
 // background music is Wii-only
+#include "bg_music_ogg.h"
 #include "enter_ogg.h"
+#include "exit_ogg.h"
 #endif
 #include "button_over_pcm.h"
 #include "button_click_pcm.h"
