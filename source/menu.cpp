@@ -840,7 +840,7 @@ static void WindowCredits(void * ptr)
 
 	txt[i] = new GuiText("Coding");
 	txt[i]->SetPosition(60,y); i++;
-	txt[i] = new GuiText("Tanooki");
+	txt[i] = new GuiText("Tanooki, YoshiDeLana2025");
 	txt[i]->SetPosition(350,y); i++; y+=24;
 	txt[i] = new GuiText("Menu artwork");
 	txt[i]->SetPosition(60,y); i++;
