@@ -1773,26 +1773,47 @@ bool8 CMemory::LoadMultiCartInt ()
         else if(Multi.cartOffsetB) // clear cart A so the bios can detect that it's not present
             memset(ROM, 0, Multi.cartOffsetB);
 
-        FILE	*fp;
-	    size_t	size;
-	    char	path[PATH_MAX + 1];
+        // --- add near the top of the file, with other includes ---
+#ifdef GEKKO
+#include "snes9xtx.h" // for pathPrefix, APPFOLDER, GCSettings
+#endif
 
-	    strcpy(path, S9xGetDirectory(BIOS_DIR));
-	    strcat(path, SLASH_STR);
-	    strcat(path, "STBIOS.bin");
+// --- replace the STBIOS load block with the following GEKKO-aware code ---
+{
+    FILE    *fp;
+    size_t  size;
+    char    path[PATH_MAX + 1];
+    char    fullpath[PATH_MAX + 1];
 
-	    fp = fopen(path, "rb");
-	    if (fp)
-	    {
-		    size = fread((void *) ROM, 1, 0x40000, fp);
-		    fclose(fp);
-		    if (!is_SufamiTurbo_BIOS(ROM, size))
-			    return (FALSE);
-	    }
-	    else
-		    return (FALSE);
+#ifdef GEKKO
+    // Build Wii filesystem path like the frontend does:
+    // e.g. "<device_prefix><APPFOLDER>/STBIOS.bin"
+    snprintf(fullpath, sizeof(fullpath), "%s%s/%s", pathPrefix[GCSettings.LoadMethod], APPFOLDER, "STBIOS.bin");
+    fp = fopen(fullpath, "rb");
+#else
+    strcpy(path, S9xGetDirectory(BIOS_DIR));
+    strcat(path, SLASH_STR);
+    strcat(path, "STBIOS.bin");
+    fp = fopen(path, "rb");
+    strncpy(fullpath, path, sizeof(fullpath)); // keep fullpath usable later
+#endif
 
-        strcpy(ROMFilename, path);
+    if (fp)
+    {
+        size = fread((void *) ROM, 1, 0x40000, fp);
+        fclose(fp);
+        if (!is_SufamiTurbo_BIOS(ROM, (int)size))
+            return (FALSE);
+    }
+    else
+    {
+        return (FALSE);
+    }
+
+    // remember where it came from
+    strncpy(ROMFilename, fullpath, sizeof(ROMFilename)-1);
+    ROMFilename[sizeof(ROMFilename)-1] = '\0';
+}
     }
 
 	switch (Multi.cartType)
