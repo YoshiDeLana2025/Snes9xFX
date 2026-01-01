@@ -14,6 +14,11 @@
 #include "display.h"
 #include <math.h>
 
+#ifdef GEKKO
+#include "snes9xtx.h" /* for pathPrefix, APPFOLDER, GCSettings */
+#endif
+
+
 extern bool bsxBiosLoadFailed;
 
 //#define BSX_DEBUG
@@ -742,11 +747,15 @@ void S9xBSXSetStream1 (uint8 count)
 
 	char path[PATH_MAX + 1], name[PATH_MAX + 1];
 
+	snprintf(name, PATH_MAX + 1, "BSX%04X-%d.bin", (BSX.PPU[0x2188 - BSXPPUBASE] | (BSX.PPU[0x2189 - BSXPPUBASE] * 256)), count); //BSXHHHH-DDD.bin
+#ifdef GEKKO
+	/* On Wii, build path from selected device prefix + app folder */
+	snprintf(path, sizeof(path), "%s%s/%s", pathPrefix[GCSettings.LoadMethod], APPFOLDER, name);
+#else
 	strcpy(path, S9xGetDirectory(SAT_DIR));
 	strcat(path, SLASH_STR);
-
-	snprintf(name, PATH_MAX + 1, "BSX%04X-%d.bin", (BSX.PPU[0x2188 - BSXPPUBASE] | (BSX.PPU[0x2189 - BSXPPUBASE] * 256)), count); //BSXHHHH-DDD.bin
 	strcat(path, name);
+#endif
 
 	BSX.sat_stream1.clear();
 	BSX.sat_stream1.open(path, std::ios::in | std::ios::binary);
@@ -774,11 +783,16 @@ void S9xBSXSetStream2 (uint8 count)
 
 	char path[PATH_MAX + 1], name[PATH_MAX + 1];
 
+	snprintf(name, PATH_MAX + 1, "BSX%04X-%d.bin", (BSX.PPU[0x218E - BSXPPUBASE] | (BSX.PPU[0x218F - BSXPPUBASE] * 256)), count); //BSXHHHH-DDD.bin
+
+#ifdef GEKKO
+	/* On Wii, build path from selected device prefix + app folder */
+	snprintf(path, sizeof(path), "%s%s/%s", pathPrefix[GCSettings.LoadMethod], APPFOLDER, name);
+#else
 	strcpy(path, S9xGetDirectory(SAT_DIR));
 	strcat(path, SLASH_STR);
-
-	snprintf(name, PATH_MAX + 1, "BSX%04X-%d.bin", (BSX.PPU[0x218E - BSXPPUBASE] | (BSX.PPU[0x218F - BSXPPUBASE] * 256)), count); //BSXHHHH-DDD.bin
 	strcat(path, name);
+#endif
 
 	BSX.sat_stream2.clear();
 	BSX.sat_stream2.open(path, std::ios::in | std::ios::binary);
