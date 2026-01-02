@@ -529,7 +529,7 @@ int WiiFileLoader()
 			bsxBiosLoadFailed = true;
 		}
 	}
-	if (isSufamiLoadedInMemory())
+	if (S9xIsSufamiTurbo())
 	{
 		if (GCSettings.SufamiTurbo)
 		{
@@ -540,11 +540,6 @@ int WiiFileLoader()
     		{
     		    // Failed to load — optionally set a flag or show info
 			    // e.g. stbiosLoadFailed = true; (if you want that)
-    		}
-    		else
-    		{
-    		    // Successful load — Memory.ROM now contains STBIOS.bin in 0..0x3FFFF.
-    		    // The emulator's multi-cart loader (memmap) should then find it when it runs later.
     		}
 		}
 	}
