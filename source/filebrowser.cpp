@@ -52,43 +52,6 @@ bool bsxBiosLoadFailed;
 
 extern bool isBSX();
 
-// Put near the other detection code in filebrowser.cpp (after ROM is loaded)
-static bool isSufamiLoadedInMemory()
-{
-    // Memory.ROM is the ROM buffer (pointer) and Memory.CalculatedSize is the loaded size
-    const uint8 *rom = Memory.ROM;
-    uint32 size = Memory.CalculatedSize;
-
-    auto starts_with = [](const uint8 *p, const char *s, size_t n)->bool {
-        return (memcmp(p, s, n) == 0);
-    };
-
-    // check function reused for an arbitrary offset (0 and 0x40000)
-    auto check_at = [&](uint32 offset)->int {
-        if (size <= offset) return 0; // nothing at this offset
-        const uint8 *p = rom + offset;
-
-        // BIOS image detection (exactly 0x40000)
-        if ((size - offset) == 0x40000 &&
-            starts_with(p, "BANDAI SFC-ADX", 14) &&
-            starts_with(p + 0x10, "SFC-ADX BACKUP", 14))
-            return 2; // BIOS
-
-        // Cart detection
-        if ((size - offset) >= 0x80000 && (size - offset) <= 0x100000 &&
-            starts_with(p, "BANDAI SFC-ADX", 14) &&
-            memcmp(p + 0x10, "SFC-ADX BACKUP", 14) != 0)
-            return 1; // cart
-        return 0;
-    };
-
-    // check at 0 and 0x40000 (some multi-cart images place data there)
-    if (check_at(0) != 0) return true;
-    if (size > 0x40000 && check_at(0x40000) != 0) return true;
-
-    return false;
-}
-
 /****************************************************************************
 * autoLoadMethod()
 * Auto-determines and sets the load device
@@ -529,20 +492,70 @@ int WiiFileLoader()
 			bsxBiosLoadFailed = true;
 		}
 	}
+	/* Debugging + safer load attempt for STBIOS */
 	if (S9xIsSufamiTurbo())
 	{
-		if (GCSettings.SufamiTurbo)
-		{
-    		snprintf(filepath, sizeof(filepath), "%s%s/STBIOS.bin", pathPrefix[GCSettings.LoadMethod], APPFOLDER);
-    		// LoadFile signature used elsewhere: LoadFile(buffer, path, offset?, size?, silent?)
-    		// Use same call pattern as BS-X (but size = 0x40000)
-    		if (LoadFile((char *)Memory.ROM, filepath, 0, 0x40000, SILENT) == 0)
-    		{
-    		    // Failed to load — optionally set a flag or show info
-			    // e.g. stbiosLoadFailed = true; (if you want that)
-    		}
-		}
-	}
+    int device = GCSettings.LoadMethod;
+    if (device <= 0 || device >= (int)(sizeof(pathPrefix)/sizeof(pathPrefix[0])))
+        device = DEVICE_SD; 
+
+    printf("Sufami detected. GCSettings.SufamiTurbo=%d, LoadMethod=%d, using device=%d\n",
+           GCSettings.SufamiTurbo, GCSettings.LoadMethod, device);
+
+    if (GCSettings.SufamiTurbo)
+    {
+        snprintf(filepath, sizeof(filepath), "%s%s/STBIOS.bin", pathPrefix[device], APPFOLDER);
+        printf("Attempting STBIOS load from: %s\n", filepath);
+
+        /* quick existence and size check */
+        FILE *fpchk = fopen(filepath, "rb");
+        if (!fpchk)
+        {
+            printf("STBIOS: fopen failed (file not found or device not mounted)\n");
+        }
+        else
+        {
+            fseeko(fpchk, 0, SEEK_END);
+            long fsize = ftello(fpchk);
+            fseeko(fpchk, 0, SEEK_SET);
+            printf("STBIOS: file found, size=%ld bytes\n", fsize);
+            fclose(fpchk);
+        }
+
+        /* Use a larger buffersize to avoid LoadFile rejecting the file if it's
+           equal to 0x40000 or there are slight differences. */
+        int ret = LoadFile((char *)Memory.ROM, filepath, 0, Memory.MAX_ROM_SIZE, SILENT);
+        if (ret == 0)
+        {
+            printf("STBIOS: LoadFile returned 0 (failed)\n");
+        }
+        else
+        {
+            printf("STBIOS: LoadFile returned %d bytes\n", ret);
+
+            /* Verify memory contains the expected signatures */
+            if (memcmp(Memory.ROM, "BANDAI SFC-ADX", 14) == 0 &&
+                memcmp(Memory.ROM + 0x10, "SFC-ADX BACKUP", 14) == 0)
+            {
+                printf("STBIOS: valid BIOS found in Memory.ROM at offset 0\n");
+            }
+            else
+            {
+                printf("STBIOS: loaded data does NOT match STBIOS signature at offset 0\n");
+                /* also check at 0x40000 just in case */
+                if (memcmp(Memory.ROM + 0x40000, "BANDAI SFC-ADX", 14) == 0 &&
+                    memcmp(Memory.ROM + 0x40000 + 0x10, "SFC-ADX BACKUP", 14) == 0)
+                {
+                    printf("STBIOS: valid BIOS found in Memory.ROM at offset 0x40000\n");
+                }
+            }
+        }
+    }
+    else
+    {
+        printf("SufamiTurbo detected but frontend toggle is off; not attempting STBIOS load.\n");
+    }
+}
 	
 	return SNESROMSize;
 }
