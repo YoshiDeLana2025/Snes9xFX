@@ -892,7 +892,8 @@ uint8 S9xGetBSXPPU (uint16 address)
 				t = 1;
 				break;
 			}
-
+            if (GCSettings.SatellaviewSatData)
+			{
 			if (BSX.sat_stream1_queue <= 0)
 			{
 				BSX.sat_stream1_count++;
@@ -903,6 +904,7 @@ uint8 S9xGetBSXPPU (uint16 address)
 			{
 				BSX.sat_stream1_count = 1;
 				S9xBSXSetStream1(BSX.sat_stream1_count - 1);
+			}
 			}
 			if (BSX.sat_stream1_loaded)
 			{
@@ -1010,6 +1012,8 @@ uint8 S9xGetBSXPPU (uint16 address)
 				break;
 			}
 
+			if (GCSettings.SatellaviewSatData)
+			{
 			if (BSX.sat_stream2_queue <= 0)
 			{
 				BSX.sat_stream2_count++;
@@ -1020,6 +1024,7 @@ uint8 S9xGetBSXPPU (uint16 address)
 			{
 				BSX.sat_stream2_count = 1;
 				S9xBSXSetStream2(BSX.sat_stream2_count - 1);
+			}
 			}
 			if (BSX.sat_stream2_loaded)
 			{
