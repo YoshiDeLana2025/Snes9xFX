@@ -22,9 +22,11 @@ jobs:
         mkdir -p dist/Snes9xFX/snes9xfx/roms
         mkdir dist/Snes9xFX/snes9xfx/cheats
         mkdir dist/Snes9xFX/snes9xfx/saves
+        mkdir dist/Snes9xFX/snes9xfx/satdata
         touch dist/Snes9xFX/snes9xfx/roms/romsdir
         touch dist/Snes9xFX/snes9xfx/cheats/cheatsdir
         touch dist/Snes9xFX/snes9xfx/saves/savesdir
+        touch dist/Snes9xFX/snes9xfx/satdata/satdatadir
         cp hbc/* dist/Snes9xFX/apps/snes9xfx/
         cp executables/snes9xfx-wii.dol dist/Snes9xFX/apps/snes9xfx/boot.dol
 

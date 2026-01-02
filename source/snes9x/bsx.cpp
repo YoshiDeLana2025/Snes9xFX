@@ -752,6 +752,8 @@ void S9xBSXSetStream1 (uint8 count)
 	strcpy(path, pathPrefix[GCSettings.LoadMethod]);
 	strcat(path, APPFOLDER);
 	strcat(path, SLASH_STR);
+	strcat(path, SATFOLDER);
+	strcat(path, SLASH_STR);
 	snprintf(name, PATH_MAX + 1, "BSX%04X-%d.bin", (BSX.PPU[0x2188 - BSXPPUBASE] | (BSX.PPU[0x2189 - BSXPPUBASE] * 256)), count); //BSXHHHH-DDD.bin
 	strcat(path, name);
 #else
@@ -791,6 +793,8 @@ void S9xBSXSetStream2 (uint8 count)
 	/* On Wii, build path from selected device prefix + app folder */
 	strcpy(path, pathPrefix[GCSettings.LoadMethod]);
 	strcat(path, APPFOLDER);
+	strcat(path, SLASH_STR);
+	strcat(path, SATFOLDER);
 	strcat(path, SLASH_STR);
 	snprintf(name, PATH_MAX + 1, "BSX%04X-%d.bin", (BSX.PPU[0x218E - BSXPPUBASE] | (BSX.PPU[0x218F - BSXPPUBASE] * 256)), count); //BSXHHHH-DDD.bin
 	strcat(path, name);

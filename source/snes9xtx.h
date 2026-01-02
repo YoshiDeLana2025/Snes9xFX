@@ -23,6 +23,7 @@
 #define APPNAME 			"Snes9xFX"
 #define APPVERSION 			"1.1.4"
 #define APPFOLDER 			"snes9xfx"
+#define SATFOLDER           "satdata"
 #define PREF_FILE_NAME		"settings.xml"
 
 #define MAXPATHLEN 1024
