@@ -492,6 +492,7 @@ int WiiFileLoader()
 			bsxBiosLoadFailed = true;
 		}
 	}
+	
 	return SNESROMSize;
 }
 

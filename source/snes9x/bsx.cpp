@@ -14,6 +14,11 @@
 #include "display.h"
 #include <math.h>
 
+#ifdef GEKKO
+#include "snes9xtx.h" /* for pathPrefix, APPFOLDER, GCSettings */
+#endif
+
+
 extern bool bsxBiosLoadFailed;
 
 //#define BSX_DEBUG
@@ -742,11 +747,21 @@ void S9xBSXSetStream1 (uint8 count)
 
 	char path[PATH_MAX + 1], name[PATH_MAX + 1];
 
-	strcpy(path, S9xGetDirectory(SAT_DIR));
+#ifdef GEKKO
+	/* On Wii, build path from selected device prefix + app folder */
+	strcpy(path, pathPrefix[GCSettings.LoadMethod]);
+	strcat(path, APPFOLDER);
 	strcat(path, SLASH_STR);
-
+	strcat(path, SATFOLDER);
+	strcat(path, SLASH_STR);
 	snprintf(name, PATH_MAX + 1, "BSX%04X-%d.bin", (BSX.PPU[0x2188 - BSXPPUBASE] | (BSX.PPU[0x2189 - BSXPPUBASE] * 256)), count); //BSXHHHH-DDD.bin
 	strcat(path, name);
+#else
+	strcpy(path, S9xGetDirectory(SAT_DIR));
+	strcat(path, SLASH_STR);
+	snprintf(name, PATH_MAX + 1, "BSX%04X-%d.bin", (BSX.PPU[0x2188 - BSXPPUBASE] | (BSX.PPU[0x2189 - BSXPPUBASE] * 256)), count); //BSXHHHH-DDD.bin
+	strcat(path, name);
+#endif
 
 	BSX.sat_stream1.clear();
 	BSX.sat_stream1.open(path, std::ios::in | std::ios::binary);
@@ -774,11 +789,21 @@ void S9xBSXSetStream2 (uint8 count)
 
 	char path[PATH_MAX + 1], name[PATH_MAX + 1];
 
-	strcpy(path, S9xGetDirectory(SAT_DIR));
+#ifdef GEKKO
+	/* On Wii, build path from selected device prefix + app folder */
+	strcpy(path, pathPrefix[GCSettings.LoadMethod]);
+	strcat(path, APPFOLDER);
 	strcat(path, SLASH_STR);
-
+	strcat(path, SATFOLDER);
+	strcat(path, SLASH_STR);
 	snprintf(name, PATH_MAX + 1, "BSX%04X-%d.bin", (BSX.PPU[0x218E - BSXPPUBASE] | (BSX.PPU[0x218F - BSXPPUBASE] * 256)), count); //BSXHHHH-DDD.bin
 	strcat(path, name);
+#else
+	strcpy(path, S9xGetDirectory(SAT_DIR));
+	strcat(path, SLASH_STR);
+	snprintf(name, PATH_MAX + 1, "BSX%04X-%d.bin", (BSX.PPU[0x218E - BSXPPUBASE] | (BSX.PPU[0x218F - BSXPPUBASE] * 256)), count); //BSXHHHH-DDD.bin
+	strcat(path, name);
+#endif
 
 	BSX.sat_stream2.clear();
 	BSX.sat_stream2.open(path, std::ios::in | std::ios::binary);
@@ -867,8 +892,8 @@ uint8 S9xGetBSXPPU (uint16 address)
 				t = 1;
 				break;
 			}
-
-#ifndef GEKKO
+            if (GCSettings.SatellaviewSatData)
+			{
 			if (BSX.sat_stream1_queue <= 0)
 			{
 				BSX.sat_stream1_count++;
@@ -880,7 +905,7 @@ uint8 S9xGetBSXPPU (uint16 address)
 				BSX.sat_stream1_count = 1;
 				S9xBSXSetStream1(BSX.sat_stream1_count - 1);
 			}
-#endif
+			}
 			if (BSX.sat_stream1_loaded)
 			{
 				//Lock at 0x7F for bigger packets
@@ -987,7 +1012,8 @@ uint8 S9xGetBSXPPU (uint16 address)
 				break;
 			}
 
-#ifndef GEKKO
+			if (GCSettings.SatellaviewSatData)
+			{
 			if (BSX.sat_stream2_queue <= 0)
 			{
 				BSX.sat_stream2_count++;
@@ -999,7 +1025,7 @@ uint8 S9xGetBSXPPU (uint16 address)
 				BSX.sat_stream2_count = 1;
 				S9xBSXSetStream2(BSX.sat_stream2_count - 1);
 			}
-#endif
+			}
 			if (BSX.sat_stream2_loaded)
 			{
 				if (BSX.sat_stream2_queue >= 128)

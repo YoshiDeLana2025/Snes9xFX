@@ -4762,6 +4762,7 @@ static int MenuSettingsEmulation()
 	OptionList options;
 
 	sprintf(options.name[i++], "Satellaview BIOS");
+	sprintf(options.name[i++], "Satellaview Broadcast Data");
 	sprintf(options.name[i++], "Region");
 	options.length = i;
 
@@ -4825,6 +4826,10 @@ static int MenuSettingsEmulation()
 				break;
 
 			case 1:
+				GCSettings.SatellaviewSatData ^= 1;
+				break;
+
+			case 2:
 				GCSettings.Region++;
 				if (GCSettings.Region > 2) {
 					GCSettings.Region = 0;
@@ -4853,14 +4858,17 @@ static int MenuSettingsEmulation()
 
 			sprintf (options.value[0], "%s", GCSettings.Satellaview == 1 ? "On" : "Off");
 
+			sprintf (options.value[1], "%s", GCSettings.SatellaviewSatData == 1 ? "On" : "Off");
+
+
 			switch(GCSettings.Region)
 			{
 				case 0:
-					sprintf (options.value[1], "Automatic"); break;
+					sprintf (options.value[2], "Automatic"); break;
 				case 1:
-					sprintf (options.value[1], "NTSC"); break;
+					sprintf (options.value[2], "NTSC"); break;
 				case 2:
-					sprintf (options.value[1], "PAL"); break;
+					sprintf (options.value[2], "PAL"); break;
 			}
 			optionBrowser.TriggerUpdate();
 		}

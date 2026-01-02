@@ -21,8 +21,9 @@
 #include "filelist.h"
 
 #define APPNAME 			"Snes9xFX"
-#define APPVERSION 			"1.1.3"
+#define APPVERSION 			"1.1.4"
 #define APPFOLDER 			"snes9xfx"
+#define SATFOLDER           "satdata"
 #define PREF_FILE_NAME		"settings.xml"
 
 #define MAXPATHLEN 1024
@@ -146,6 +147,8 @@ struct SGCSettings{
 	int		cpuOverclock;
 	int		NoSpriteLimit;
 	int		Satellaview;
+    int     SatellaviewSatData;
+	int     SufamiTurbo;   /* new: frontend toggle to load STBIOS.bin from Wii filesystem */
 	int		Region;
 	int		WiimoteOrientation;
 	int		ExitAction;
