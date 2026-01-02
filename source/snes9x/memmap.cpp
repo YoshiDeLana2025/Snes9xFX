@@ -1794,6 +1794,7 @@ bool8 CMemory::LoadMultiCartInt ()
         else if(Multi.cartOffsetB) // clear cart A so the bios can detect that it's not present
             memset(ROM, 0, Multi.cartOffsetB);
 
+        
         FILE	*fp;
 	    size_t	size;
 	    char	path[PATH_MAX + 1];
@@ -1809,11 +1810,27 @@ bool8 CMemory::LoadMultiCartInt ()
 		    fclose(fp);
 		    if (!is_SufamiTurbo_BIOS(ROM, size))
 			    return (FALSE);
+            /* remember where we loaded it from (as original code did) */
+            strcpy(ROMFilename, path);
 	    }
 	    else
-		    return (FALSE);
-
-        strcpy(ROMFilename, path);
+	    {
+            /* If the emulator-side open failed (e.g. on GEKKO S9xGetDirectory
+               may be a dummy), allow a frontend to have pre-loaded the BIOS
+               into Memory.ROM.  Accept it if the expected BIOS signature is
+               present in memory; otherwise fail as before. */
+            if (is_SufamiTurbo_BIOS(ROM, 0x40000))
+            {
+                /* Frontend has already placed STBIOS.bin contents into Memory.ROM.
+                   We didn't load it from a path, so clear ROMFilename or leave
+                   it as-is; keep execution going. */
+                ROMFilename[0] = '\0';
+            }
+            else
+            {
+                return (FALSE);
+            }
+		}
     }
 
 	switch (Multi.cartType)
