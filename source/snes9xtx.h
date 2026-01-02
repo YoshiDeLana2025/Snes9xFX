@@ -147,6 +147,7 @@ struct SGCSettings{
 	int		cpuOverclock;
 	int		NoSpriteLimit;
 	int		Satellaview;
+	int     SufamiTurbo;   /* new: frontend toggle to load STBIOS.bin from Wii filesystem */
 	int		Region;
 	int		WiimoteOrientation;
 	int		ExitAction;

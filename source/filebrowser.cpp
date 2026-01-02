@@ -52,6 +52,43 @@ bool bsxBiosLoadFailed;
 
 extern bool isBSX();
 
+// Put near the other detection code in filebrowser.cpp (after ROM is loaded)
+static bool isSufamiLoadedInMemory()
+{
+    // Memory.ROM is the ROM buffer (pointer) and Memory.CalculatedSize is the loaded size
+    const uint8 *rom = Memory.ROM;
+    uint32 size = Memory.CalculatedSize;
+
+    auto starts_with = [](const uint8 *p, const char *s, size_t n)->bool {
+        return (memcmp(p, s, n) == 0);
+    };
+
+    // check function reused for an arbitrary offset (0 and 0x40000)
+    auto check_at = [&](uint32 offset)->int {
+        if (size <= offset) return 0; // nothing at this offset
+        const uint8 *p = rom + offset;
+
+        // BIOS image detection (exactly 0x40000)
+        if ((size - offset) == 0x40000 &&
+            starts_with(p, "BANDAI SFC-ADX", 14) &&
+            starts_with(p + 0x10, "SFC-ADX BACKUP", 14))
+            return 2; // BIOS
+
+        // Cart detection
+        if ((size - offset) >= 0x80000 && (size - offset) <= 0x100000 &&
+            starts_with(p, "BANDAI SFC-ADX", 14) &&
+            memcmp(p + 0x10, "SFC-ADX BACKUP", 14) != 0)
+            return 1; // cart
+        return 0;
+    };
+
+    // check at 0 and 0x40000 (some multi-cart images place data there)
+    if (check_at(0) != 0) return true;
+    if (size > 0x40000 && check_at(0x40000) != 0) return true;
+
+    return false;
+}
+
 /****************************************************************************
 * autoLoadMethod()
 * Auto-determines and sets the load device
@@ -492,6 +529,26 @@ int WiiFileLoader()
 			bsxBiosLoadFailed = true;
 		}
 	}
+	if (isSufamiLoadedInMemory())
+	{
+		if (GCSettings.SufamiTurbo)
+		{
+    		snprintf(filepath, sizeof(filepath), "%s%s/STBIOS.bin", pathPrefix[GCSettings.LoadMethod], APPFOLDER);
+    		// LoadFile signature used elsewhere: LoadFile(buffer, path, offset?, size?, silent?)
+    		// Use same call pattern as BS-X (but size = 0x40000)
+    		if (LoadFile((char *)Memory.ROM, filepath, 0, 0x40000, SILENT) == 0)
+    		{
+    		    // Failed to load — optionally set a flag or show info
+			    // e.g. stbiosLoadFailed = true; (if you want that)
+    		}
+    		else
+    		{
+    		    // Successful load — Memory.ROM now contains STBIOS.bin in 0..0x3FFFF.
+    		    // The emulator's multi-cart loader (memmap) should then find it when it runs later.
+    		}
+		}
+	}
+	
 	return SNESROMSize;
 }
 
