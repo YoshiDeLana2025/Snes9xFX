@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        image: ["Wii", "GameCube"]
+        image: ["Wii"]
     container: devkitpro/devkitppc:20230110
  
     steps:
@@ -27,9 +27,11 @@ jobs:
         mkdir -p dist/Snes9xFX/snes9xfx/roms
         mkdir dist/Snes9xFX/snes9xfx/cheats
         mkdir dist/Snes9xFX/snes9xfx/saves
+        mkdir dist/Snes9xFX/snes9xfx/satdata
         touch dist/Snes9xFX/snes9xfx/roms/romsdir
         touch dist/Snes9xFX/snes9xfx/cheats/cheatsdir
         touch dist/Snes9xFX/snes9xfx/saves/savesdir
+        touch dist/Snes9xFX/snes9xfx/satdata/satdatadir
         cp hbc/* dist/Snes9xFX/apps/snes9xfx/
         cp executables/snes9xfx-wii.dol dist/Snes9xFX/apps/snes9xfx/boot.dol
 
@@ -40,22 +42,3 @@ jobs:
         name: Snes9xFX
         path: |
          dist/Snes9xFX/
-    
-    - name: Build GameCube
-      if: ${{ matrix.image == 'GameCube' }}
-      run: |
-        make -f Makefile.gc -j2
-        
-    - name: Copy GameCube artifact
-      if: ${{ matrix.image == 'GameCube' }}
-      run: | 
-        mkdir -p dist/Snes9xFX-GameCube
-        cp executables/snes9xfx-gc.dol dist/Snes9xFX-GameCube/
-    
-    - name: Upload GameCube artifact
-      uses: actions/upload-artifact@v4
-      if: ${{ matrix.image == 'GameCube' }}
-      with: 
-        name: Snes9xFX-GameCube
-        path: |
-         dist/Snes9xFX-GameCube/
