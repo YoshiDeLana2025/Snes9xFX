@@ -21,7 +21,7 @@
 #include "filelist.h"
 
 #define APPNAME 			"Snes9xFX"
-#define APPVERSION 			"1.1.3"
+#define APPVERSION 			"1.1.4"
 #define APPFOLDER 			"snes9xfx"
 #define PREF_FILE_NAME		"settings.xml"
 
