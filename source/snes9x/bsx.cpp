@@ -882,7 +882,6 @@ uint8 S9xGetBSXPPU (uint16 address)
 				break;
 			}
 
-#ifndef GEKKO
 			if (BSX.sat_stream1_queue <= 0)
 			{
 				BSX.sat_stream1_count++;
@@ -894,7 +893,6 @@ uint8 S9xGetBSXPPU (uint16 address)
 				BSX.sat_stream1_count = 1;
 				S9xBSXSetStream1(BSX.sat_stream1_count - 1);
 			}
-#endif
 			if (BSX.sat_stream1_loaded)
 			{
 				//Lock at 0x7F for bigger packets
@@ -1001,7 +999,6 @@ uint8 S9xGetBSXPPU (uint16 address)
 				break;
 			}
 
-#ifndef GEKKO
 			if (BSX.sat_stream2_queue <= 0)
 			{
 				BSX.sat_stream2_count++;
@@ -1013,7 +1010,6 @@ uint8 S9xGetBSXPPU (uint16 address)
 				BSX.sat_stream2_count = 1;
 				S9xBSXSetStream2(BSX.sat_stream2_count - 1);
 			}
-#endif
 			if (BSX.sat_stream2_loaded)
 			{
 				if (BSX.sat_stream2_queue >= 128)
