@@ -165,6 +165,7 @@ preparePrefsData ()
 	createXMLSection("Emulation", "Emulation Settings");
 
 	createXMLSetting("Satellaview", "Satellaview BIOS", toStr(GCSettings.Satellaview));
+	createXMLSetting("SatellaviewSatData", "Satellaview Broadcast Data", toStr(GCSettings.SatellaviewSatData));
 	createXMLSetting("SufamiTurbo", "Sufami Turbo BIOS", toStr(GCSettings.SufamiTurbo));
 
 	createXMLSection("Menu", "Menu Settings");
@@ -359,6 +360,7 @@ decodePrefsData ()
 			// Emulation Settings
 
 			loadXMLSetting(&GCSettings.Satellaview, "Satellaview");
+			loadXMLSetting(&GCSettings.SatellaviewSatData, "SatellaviewSatData");
 			loadXMLSetting(&GCSettings.SufamiTurbo, "SufamiTurbo");
 
 			// Menu Settings
@@ -465,7 +467,8 @@ DefaultSettings ()
 	GCSettings.yshift = 0; // Vertical video shift
 
 	GCSettings.Satellaview = 1; // Enabled by default
-	GCSettings.SufamiTurbo = 1; // Enabled by default
+	GCSettings.SatellaviewSatData = 0; // Disabled by default
+	GCSettings.SufamiTurbo = 0; // Disabled by default
 
 	GCSettings.WiimoteOrientation = 0;
 	GCSettings.ExitAction = 0;
