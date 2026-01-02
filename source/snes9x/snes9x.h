@@ -337,6 +337,11 @@ void S9xClearPause(uint32);
 void S9xExit(void);
 void S9xMessage(int, int, const char *);
 
+
+/* Returns TRUE if the currently-loaded Memory.ROM looks like a Sufami Turbo
+   cart or BIOS (checks signatures and sizes). */
+bool8 S9xIsSufamiTurbo(void);
+
 extern struct SSettings			Settings;
 extern struct SCPUState			CPU;
 extern struct STimings			Timings;
