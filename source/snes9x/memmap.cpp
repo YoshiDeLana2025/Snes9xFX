@@ -1089,13 +1089,13 @@ static bool8 is_SufamiTurbo_Cart (const uint8 *data, uint32 size)
 bool8 S9xIsSufamiTurbo(void)
 {
 	/* Check at ROM base */
-	if (is_SufamiTurbo_BIOS(Memory.ROM, CalculatedSize) || is_SufamiTurbo_Cart(Memory.ROM, CalculatedSize))
+	if (is_SufamiTurbo_BIOS(Memory.ROM, Memory.CalculatedSize) || is_SufamiTurbo_Cart(Memory.ROM, Memory.CalculatedSize))
 		return (TRUE);
 
 	/* Some images place the second cart/bios at offset 0x40000 */
-	if (CalculatedSize > 0x40000)
+	if (Memory.CalculatedSize > 0x40000)
 	{
-		uint32 rem = CalculatedSize - 0x40000;
+		uint32 rem = Memory.CalculatedSize - 0x40000;
 		uint8 *p = Memory.ROM + 0x40000;
 		if (is_SufamiTurbo_BIOS(p, rem) || is_SufamiTurbo_Cart(p, rem))
 			return (TRUE);
