@@ -1083,6 +1083,27 @@ static bool8 is_SufamiTurbo_Cart (const uint8 *data, uint32 size)
 		return (FALSE);
 }
 
+/* Public wrapper so frontend/other units can detect Sufami Turbo images
+   in Memory.ROM without duplicating detection logic. Checks both offset 0
+   and offset 0x40000 (multi-cart layout). */
+bool8 S9xIsSufamiTurbo(void)
+{
+	/* Check at ROM base */
+	if (is_SufamiTurbo_BIOS(ROM, CalculatedSize) || is_SufamiTurbo_Cart(ROM, CalculatedSize))
+		return (TRUE);
+
+	/* Some images place the second cart/bios at offset 0x40000 */
+	if (CalculatedSize > 0x40000)
+	{
+		uint32 rem = CalculatedSize - 0x40000;
+		uint8 *p = ROM + 0x40000;
+		if (is_SufamiTurbo_BIOS(p, rem) || is_SufamiTurbo_Cart(p, rem))
+			return (TRUE);
+	}
+
+	return (FALSE);
+}
+
 static bool8 is_BSCart_BIOS(const uint8 *data, uint32 size)
 {
 	if ((data[0x7FB2] == 0x5A) && (data[0x7FB5] != 0x20) && (data[0x7FDA] == 0x33))
