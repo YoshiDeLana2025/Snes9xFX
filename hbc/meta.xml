@@ -2,8 +2,8 @@
 <app version="1">
   <name>Snes9xFX</name>
   <coder>YoshiDeLana2025</coder>
-  <version>1.1.4</version>
-  <release_date>20260102</release_date>
+  <version>1.1.5</version>
+  <release_date>20260622</release_date>
   <short_description>SNES/SFC Emulator</short_description>
   <long_description>Snes9xFX is a fork of Snes9xTX on Wii.</long_description>
   <ahb_access />
