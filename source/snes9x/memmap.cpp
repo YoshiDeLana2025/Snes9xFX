@@ -3116,10 +3116,12 @@ void CMemory::Map_SufamiTurboLoROMMap (void)
 
 	map_lorom_offset(0x00, 0x1f, 0x8000, 0xffff, 0x40000, 0);
 	map_lorom_offset(0x20, 0x3f, 0x8000, 0xffff, Multi.cartSizeA, Multi.cartOffsetA);
-	map_lorom_offset(0x40, 0x5f, 0x8000, 0xffff, Multi.cartSizeB, Multi.cartOffsetB);
+	if (Multi.cartSizeB)
+		map_lorom_offset(0x40, 0x5f, 0x8000, 0xffff, Multi.cartSizeB, Multi.cartOffsetB);
 	map_lorom_offset(0x80, 0x9f, 0x8000, 0xffff, 0x40000, 0);
 	map_lorom_offset(0xa0, 0xbf, 0x8000, 0xffff, Multi.cartSizeA, Multi.cartOffsetA);
-	map_lorom_offset(0xc0, 0xdf, 0x8000, 0xffff, Multi.cartSizeB, Multi.cartOffsetB);
+	if (Multi.cartSizeB)
+		map_lorom_offset(0xc0, 0xdf, 0x8000, 0xffff, Multi.cartSizeB, Multi.cartOffsetB);
 
 	if (Multi.sramSizeA)
 	{
