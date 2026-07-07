@@ -1459,6 +1459,22 @@ bool8 CMemory::LoadROM (const char *filename)
         if (!totalFileSize)
             return (FALSE);
 
+        if (Multi.cartType == 4)
+        {
+            char savedROMFilename[PATH_MAX + 1];
+            strcpy(savedROMFilename, ROMFilename);
+
+            if (!LoadMultiCartInt())
+                return FALSE;
+
+            strcpy(ROMFilename, savedROMFilename);
+
+            #ifdef GEKKO
+            WiiSetupCheats();
+            #endif
+            return TRUE;
+        }
+
         CheckForAnyPatch(filename, HeaderCount != 0, totalFileSize);
     }
     while(!LoadROMInt(totalFileSize));

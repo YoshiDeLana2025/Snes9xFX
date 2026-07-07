@@ -478,6 +478,64 @@ int WiiFileLoader()
 		return 0;
 
 	SNESROMSize = Memory.HeaderRemove(size, Memory.ROM);
+
+	bool isSufamiTurboCart = (SNESROMSize >= 0x80000 && SNESROMSize <= 0x100000 &&
+							  strncmp((char *)Memory.ROM, "BANDAI SFC-ADX", 14) == 0 &&
+							  strncmp((char *)(Memory.ROM + 0x10), "SFC-ADX BACKUP", 14) != 0);
+
+	if(isSufamiTurboCart)
+	{
+		if(GCSettings.SufamiTurbo)
+		{
+			sprintf (filepath, "%s%s/STBIOS.bin", pathPrefix[GCSettings.LoadMethod], APPFOLDER);
+			
+			// Move the game cartridge data to offset 0x40000
+			memmove(Memory.ROM + 0x40000, Memory.ROM, SNESROMSize);
+			
+			// Load Sufami Turbo BIOS at offset 0
+			size_t biosSize = LoadFile ((char *)Memory.ROM, filepath, 0, 0x40000, SILENT);
+			
+			bool isSufamiTurboBIOS = (biosSize == 0x40000 &&
+									  strncmp((char *)Memory.ROM, "BANDAI SFC-ADX", 14) == 0 &&
+									  strncmp((char *)(Memory.ROM + 0x10), "SFC-ADX BACKUP", 14) == 0);
+			if (!isSufamiTurboBIOS)
+			{
+				ErrorPrompt("STBIOS.bin not found or invalid! Place it in the snes9xfx/ folder.");
+				return 0; // Load failure
+			}
+			
+			// Populate Multi
+			Multi.cartType = 4; // Sufami Turbo
+			Multi.cartSizeA = SNESROMSize;
+			Multi.cartOffsetA = 0x40000;
+			if(!inSz)
+			{
+				MakeFilePath(filepath, FILE_ROM);
+				strcpy(Multi.fileNameA, filepath);
+			}
+			else
+			{
+				strcpy(Multi.fileNameA, szpath);
+			}
+			Multi.sramSizeA = 4;
+			Multi.sramMaskA = ((1 << (Multi.sramSizeA + 3)) * 128 - 1);
+			Multi.sramA = Memory.SRAM;
+
+			Multi.cartSizeB = 0;
+			Multi.cartOffsetB = 0;
+			Multi.sramSizeB = 0;
+			Multi.sramMaskB = 0;
+			Multi.sramB = NULL;
+			
+			return SNESROMSize + biosSize;
+		}
+		else
+		{
+			ErrorPrompt("Sufami Turbo BIOS option is disabled! Please enable it in Emulation Settings.");
+			return 0; // Load failure
+		}
+	}
+
 	bsxBiosLoadFailed = false;
 
 	if(isBSX())

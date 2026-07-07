@@ -4763,6 +4763,7 @@ static int MenuSettingsEmulation()
 
 	sprintf(options.name[i++], "Satellaview BIOS");
 	sprintf(options.name[i++], "Satellaview Broadcast Data");
+	sprintf(options.name[i++], "Sufami Turbo BIOS");
 	sprintf(options.name[i++], "Region");
 	options.length = i;
 
@@ -4830,6 +4831,10 @@ static int MenuSettingsEmulation()
 				break;
 
 			case 2:
+				GCSettings.SufamiTurbo ^= 1;
+				break;
+
+			case 3:
 				GCSettings.Region++;
 				if (GCSettings.Region > 2) {
 					GCSettings.Region = 0;
@@ -4860,15 +4865,16 @@ static int MenuSettingsEmulation()
 
 			sprintf (options.value[1], "%s", GCSettings.SatellaviewSatData == 1 ? "On" : "Off");
 
+			sprintf (options.value[2], "%s", GCSettings.SufamiTurbo == 1 ? "On" : "Off");
 
 			switch(GCSettings.Region)
 			{
 				case 0:
-					sprintf (options.value[2], "Automatic"); break;
+					sprintf (options.value[3], "Automatic"); break;
 				case 1:
-					sprintf (options.value[2], "NTSC"); break;
+					sprintf (options.value[3], "NTSC"); break;
 				case 2:
-					sprintf (options.value[2], "PAL"); break;
+					sprintf (options.value[3], "PAL"); break;
 			}
 			optionBrowser.TriggerUpdate();
 		}
